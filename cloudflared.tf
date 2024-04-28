@@ -33,10 +33,6 @@ provider "docker" {
   ]
 }
 
-resource "docker_network" "erebos_net" {
-  name = "erebos-net"
-}
-
 resource "docker_image" "cloudflared" {
   name = "cloudflare/cloudflared:latest"
 }
