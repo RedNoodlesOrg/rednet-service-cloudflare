@@ -1,4 +1,7 @@
 terraform {
+  cloud {
+    organization = "RedNoodles"
+  }
   required_providers {
     docker = {
       source  = "kreuzwerker/docker"
