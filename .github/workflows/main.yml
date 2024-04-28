@@ -30,6 +30,8 @@ jobs:
       # Install the latest version of Terraform CLI
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       # Install cloudflared to tunnel ssh
       - name: Install cloudflare
