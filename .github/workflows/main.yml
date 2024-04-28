@@ -1,0 +1,33 @@
+name: Deploy with Terraform
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+    
+    - name: Install cloudflare
+      run: |
+        curl -L "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64" -o cloudflared
+        sudo chmod +x cloudflared
+        sudo mv cloudflared /usr/local/bin/cloudflared
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
+      env:
+        TF_VAR_cloudflared_token: ${{ secrets.CLOUDFLARED_TOKEN }}
+        TF_VAR_cloudflared_id: ${{ secrets.CLOUDFLARED_ID }}
+        TF_VAR_cloudflared_secret: ${{ secrets.CLOUDFLARED_SECRET }}
