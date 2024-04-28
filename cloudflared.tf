@@ -7,12 +7,12 @@ terraform {
   }
 }
 
-variable "cloudflare_id" {
+variable "cloudflared_id" {
   type        = string
   description = "Service Token ID for Cloudflare Access"
 }
 
-variable "cloudflare_secret" {
+variable "cloudflared_secret" {
   type        = string
   description = "Service Token Secret for Cloudflare Access"
 }
