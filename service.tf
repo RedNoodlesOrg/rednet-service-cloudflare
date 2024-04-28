@@ -13,6 +13,15 @@ terraform {
   }
 }
 
+variable "service_name" {
+  type        = string
+  description = "Name of service"
+}
+
+variable "container_name" {
+  type        = string
+  description = "Name of container"
+}
 
 variable "cloudflared_id" {
   type        = string
@@ -46,8 +55,8 @@ resource "docker_image" "cloudflared" {
 
 resource "docker_container" "cloudflared" {
   image    = docker_image.cloudflared.image_id
-  name     = "cloudflared-deploy-test"
-  hostname = "cloudflared-deploy-test"
+  name     = "${var.service_name}-${var.container_name}"
+  hostname = "${var.service_name}-${var.container_name}"
   command  = ["tunnel", "--no-autoupdate", "run", "--token", var.cloudflared_token]
 
   networks_advanced {
