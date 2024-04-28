@@ -1,2 +1,2 @@
-service_name   = "cloudflared"
+service_name = "cloudflared"
 container_name = "tunnel"
