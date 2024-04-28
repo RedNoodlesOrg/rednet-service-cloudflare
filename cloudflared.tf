@@ -29,7 +29,7 @@ provider "docker" {
     "-o", "IdentityFile=~/.ssh/id_ed25519",
     "-o", "StrictHostKeyChecking=no",
     "-o", "UserKnownHostsFile=/dev/null",
-    "-o", "ProxyCommand=/usr/local/bin/cloudflared access ssh --id ${var.cloudflare_id} --secret ${var.cloudflare_secret} --hostname %h"
+    "-o", "ProxyCommand=/usr/local/bin/cloudflared access ssh --id ${var.cloudflared_id} --secret ${var.cloudflared_secret} --hostname %h"
   ]
 }
 
