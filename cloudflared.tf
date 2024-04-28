@@ -1,8 +1,8 @@
 terraform {
-  backend "remote" {
+  cloud {
     organization = "RedNoodles"
     workspaces {
-      name = "rednet-services-workspace"
+      name = "RedNet-Service-Cloudflared"
     }
   }
   required_providers {

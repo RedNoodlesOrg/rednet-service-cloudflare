@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - main
+env:
+  TF_CLOUD_ORGANIZATION: "RedNoodles"
+  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
+  TF_WORKSPACE: "RedNet-Service-Cloudflared"
 jobs:
   terraform:
     name: "Terraform"
