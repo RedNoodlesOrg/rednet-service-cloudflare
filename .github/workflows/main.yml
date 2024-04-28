@@ -9,6 +9,9 @@ env:
   TF_CLOUD_ORGANIZATION: "RedNoodles"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "RedNet-Service-Cloudflared"
+  TF_VAR_cloudflared_token: ${{ secrets.CLOUDFLARED_TOKEN }}
+  TF_VAR_cloudflared_id: ${{ secrets.CLOUDFLARED_ID }}
+  TF_VAR_cloudflared_secret: ${{ secrets.CLOUDFLARED_SECRET }}
 jobs:
   terraform:
     name: "Terraform"
@@ -27,8 +30,6 @@ jobs:
       # Install the latest version of Terraform CLI
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       # Install cloudflared to tunnel ssh
       - name: Install cloudflare
@@ -57,16 +58,9 @@ jobs:
       # Generates an execution plan for Terraform
       - name: Terraform Plan
         run: terraform plan -input=false
-        env:
-          TF_VAR_cloudflared_token: ${{ secrets.CLOUDFLARED_TOKEN }}
-          TF_VAR_cloudflared_id: ${{ secrets.CLOUDFLARED_ID }}
-          TF_VAR_cloudflared_secret: ${{ secrets.CLOUDFLARED_SECRET }}
 
       # On push to "main", build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
         if: ${{ github.event_name == 'push' }}
         run: terraform apply -auto-approve -input=false
-        env:
-          TF_VAR_cloudflared_token: ${{ secrets.CLOUDFLARED_TOKEN }}
-          TF_VAR_cloudflared_id: ${{ secrets.CLOUDFLARED_ID }}
-          TF_VAR_cloudflared_secret: ${{ secrets.CLOUDFLARED_SECRET }}
+          
