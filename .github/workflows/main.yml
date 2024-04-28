@@ -1,9 +1,7 @@
 name: Deploy with Terraform
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   terraform:
@@ -22,11 +20,19 @@ jobs:
         sudo chmod +x cloudflared
         sudo mv cloudflared /usr/local/bin/cloudflared
 
+    - name: Set up SSH key
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "${SSH_PRIVATE_KEY}" | base64 --decode > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
+
     - name: Terraform Init
       run: terraform init
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: terraform plan
       env:
         TF_VAR_cloudflared_token: ${{ secrets.CLOUDFLARED_TOKEN }}
         TF_VAR_cloudflared_id: ${{ secrets.CLOUDFLARED_ID }}
