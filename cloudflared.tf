@@ -43,7 +43,7 @@ resource "docker_image" "cloudflared" {
 
 resource "docker_container" "cloudflared" {
   image   = docker_image.cloudflared.image_id
-  name    = "cloudflared"
+  name    = "cloudflared-deploy-test"
   command = ["tunnel", "--no-autoupdate", "run", "--token", var.cloudflared_token]
 
   networks_advanced {

@@ -2,7 +2,9 @@ name: Deploy with Terraform
 
 on:
   workflow_dispatch:
-
+  push:
+    branches:
+      - main
 jobs:
   terraform:
     name: "Terraform"
