@@ -1,10 +1,4 @@
 terraform {
-  cloud {
-    organization = "RedNoodles"
-    workspaces {
-      name = "RedNet-Service-Cloudflared"
-    }
-  }
   required_providers {
     docker = {
       source  = "kreuzwerker/docker"
