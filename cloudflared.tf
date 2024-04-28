@@ -23,9 +23,9 @@ variable "cloudflared_token" {
 }
 
 provider "docker" {
-  host     = "ssh://docker_user@deploy.rednoodles.bid"
+  host = "ssh://docker_user@deploy.rednoodles.bid"
   ssh_opts = [
-    "-o", "IdentityAgent=none" ,
+    "-o", "IdentityAgent=none",
     "-o", "IdentityFile=~/.ssh/id_ed25519",
     "-o", "StrictHostKeyChecking=no",
     "-o", "UserKnownHostsFile=/dev/null",
