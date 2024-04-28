@@ -6,9 +6,6 @@ on:
     branches:
       - main
 env:
-  TF_CLOUD_ORGANIZATION: "RedNoodles"
-  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
-  TF_WORKSPACE: "RedNet-Service-Cloudflared"
   TF_VAR_cloudflared_token: ${{ secrets.CLOUDFLARED_TOKEN }}
   TF_VAR_cloudflared_id: ${{ secrets.CLOUDFLARED_ID }}
   TF_VAR_cloudflared_secret: ${{ secrets.CLOUDFLARED_SECRET }}

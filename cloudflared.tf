@@ -1,6 +1,9 @@
 terraform {
   cloud {
     organization = "RedNoodles"
+    workspaces {
+      name = "rednet-services-cloudflared"
+    }
   }
   required_providers {
     docker = {
@@ -9,6 +12,7 @@ terraform {
     }
   }
 }
+
 
 variable "cloudflared_id" {
   type        = string
