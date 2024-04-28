@@ -1,4 +1,10 @@
 terraform {
+  backend "remote" {
+    organization = "RedNoodles"
+    workspaces {
+      name = "rednet-services-workspace"
+    }
+  }
   required_providers {
     docker = {
       source  = "kreuzwerker/docker"
@@ -38,9 +44,10 @@ resource "docker_image" "cloudflared" {
 }
 
 resource "docker_container" "cloudflared" {
-  image   = docker_image.cloudflared.image_id
-  name    = "cloudflared-deploy-test"
-  command = ["tunnel", "--no-autoupdate", "run", "--token", var.cloudflared_token]
+  image    = docker_image.cloudflared.image_id
+  name     = "cloudflared-deploy-test"
+  hostname = "cloudflared-deploy-test"
+  command  = ["tunnel", "--no-autoupdate", "run", "--token", var.cloudflared_token]
 
   networks_advanced {
     name = "erebos-net"
