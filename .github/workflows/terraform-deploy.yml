@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - main
+env:
+  TF_VAR_cloudflared_token: ${{ secrets.CLOUDFLARED_TOKEN }}
+  TF_VAR_cloudflared_id: ${{ secrets.CLOUDFLARED_ID }}
+  TF_VAR_cloudflared_secret: ${{ secrets.CLOUDFLARED_SECRET }}
 jobs:
   call-deploy:
     uses: RedNoodlesOrg/rednet-actions-workflows/.github/workflows/terraform-deploy.yml@main
@@ -12,6 +16,3 @@ jobs:
       apply_changes: ${{ github.event_name == 'push' }}
     secrets:
       TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-      TF_VAR_cloudflared_token: ${{ secrets.CLOUDFLARED_TOKEN }}
-      TF_VAR_cloudflared_id: ${{ secrets.CLOUDFLARED_ID }}
-      TF_VAR_cloudflared_secret: ${{ secrets.CLOUDFLARED_SECRET }}
