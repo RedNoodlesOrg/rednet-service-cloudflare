@@ -5,14 +5,52 @@ on:
   push:
     branches:
       - main
+
 env:
   TF_VAR_cloudflared_token: ${{ secrets.CLOUDFLARED_TOKEN }}
   TF_VAR_cloudflared_id: ${{ secrets.CLOUDFLARED_ID }}
   TF_VAR_cloudflared_secret: ${{ secrets.CLOUDFLARED_SECRET }}
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  call-deploy:
-    uses: RedNoodlesOrg/rednet-actions-workflows/.github/workflows/terraform-deploy.yml@main
-    with:
-      apply_changes: ${{ github.event_name == 'push' }}
-    secrets:
-      TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Install cloudflare
+        run: |
+          curl -L "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64" -o cloudflared
+          sudo chmod +x cloudflared
+          sudo mv cloudflared /usr/local/bin/cloudflared
+
+      - name: Set up SSH key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${SSH_PRIVATE_KEY}" | base64 --decode > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      - name: Terraform Plan
+        run: terraform plan -input=false
+  
+      - name: Terraform Apply
+        if: ${{ github.event_name == 'push' }}
+        run: terraform apply -auto-approve -input=false
