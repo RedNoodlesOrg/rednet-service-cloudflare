@@ -2,9 +2,8 @@ name: Terraform Format Check
 
 on:
   pull_request:
-    branches: [main]
-    paths:
-      - '**/*.tf'
+    branches:
+      - main
 
 jobs:
     call-format-check:
