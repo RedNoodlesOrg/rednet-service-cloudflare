@@ -14,3 +14,5 @@ jobs:
     uses: RedNoodlesOrg/rednet-actions-workflows/.github/workflows/terraform-deploy.yml@main
     with:
       apply_changes: ${{ github.event_name == 'push' }}
+    secrets:
+      TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
