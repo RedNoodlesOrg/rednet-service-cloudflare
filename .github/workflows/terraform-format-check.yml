@@ -1,0 +1,35 @@
+name: Terraform Format Check
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/*.tf'
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format
+        id: fmt
+        run: |
+          terraform fmt -check -recursive -no-color
+          if [ $? -ne 0 ]; then
+            echo "Terraform files need to be formatted. Run 'terraform fmt -recursive'."
+            exit 1
+          fi
+
+      - name: Output result
+        if: always()
+        run: |
+          if [ ${{ steps.fmt.outcome }} == 'failure' ]; then
+            echo "Formatting issues detected."
+          else
+            echo "All Terraform files are correctly formatted."
+          fi
