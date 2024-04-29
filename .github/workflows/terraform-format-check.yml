@@ -1,0 +1,11 @@
+name: Terraform Format Check
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/*.tf'
+
+jobs:
+    call-format-check:
+        uses: RedNoodlesOrg/rednet-actions-workflows/.github/workflows/terraform-format-check.yml@main
