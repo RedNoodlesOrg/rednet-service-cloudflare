@@ -1,0 +1,54 @@
+name: Deploy with Remote Docker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  CLOUDFLARED_TOKEN: ${{ secrets.CLOUDFLARED_TOKEN }}
+  DOCKER_HOST: ${{ vars.DOCKER_HOST }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install cloudflare
+        run: |
+          curl -L "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64" -o cloudflared
+          sudo chmod +x cloudflared
+          sudo mv cloudflared /usr/local/bin/cloudflared
+
+      - name: Set up SSH Key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${SSH_PRIVATE_KEY}" | base64 --decode > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Setup SSH Config
+        run: |
+          mkdir -p ~/.ssh
+          echo "Host deploy.rednoodles.bid" >> ~/.ssh/config
+          echo "  IdentityAgent none" >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/id_ed25519" >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
+          echo "  ProxyCommand /usr/local/bin/cloudflared access ssh --id ${{ secrets.CLOUDFLARED_ID }} --secret ${{ secrets.CLOUDFLARED_SECRET }} --hostname %h" >> ~/.ssh/config
+          chmod 600 ~/.ssh/config
+          chmod 700 ~/.ssh
+      
+      - name: Docker Test
+        id: docker
+        run: |
+          docker ps
