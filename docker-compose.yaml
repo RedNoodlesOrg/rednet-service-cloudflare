@@ -1,4 +1,4 @@
-name: cloudflared
+name: "cloudflared-stack"
 services:
   cloudflared:
     command:
@@ -8,10 +8,10 @@ services:
     - --token
     - $CLOUDFLARED_TOKEN
     image: cloudflare/cloudflared:latest
-    networks:
-      erebos-net: null
     restart: unless-stopped
+    networks:
+      cloudflared-network: null
 networks:
-  erebos-net:
-    name: erebos-net
+  cloudflared-network:
+    name: cloudflared-network
     external: true
